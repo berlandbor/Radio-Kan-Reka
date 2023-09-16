@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интернет-радио плеер</title>
+    <style>
+        .radio-player {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+       .station-name {
+    font-weight: bold;
+    margin-right: 20px;
+}
+.buffering {
+    text-align: center;
+    display: none;
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+h1{
+  text-align: center;
+  color: grey;
+}
+    </style>
+</head>
+<body>
+  <h1>berlandbor</h1>
+  <div class="radio-player">
+    <div class="station-name">Radio: Kan-Reka</div>
+    <button id="playButton">Play</button>
+    <button id="stopButton">Stop</button>
+
+    <input type="hidden" id="radioUrl" value="https://kanliveicy.media.kan.org.il/icy/kanreka_mp3">
+
+</div>
+        <div class="buffering" id="bufferingIndicator">Буферизация...</div>
+    <audio id="audioPlayer" preload="none"></audio>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const stopButton = document.getElementById('stopButton');
+        const radioUrl = document.getElementById('radioUrl');
+
+        playButton.addEventListener('click', () => {
+            const url = radioUrl.value;
+            if (!url) {
+                alert('Введите URL радиостанции!');
+                return;
+            }
+
+            audioPlayer.src = url;
+            audioPlayer.play();
+        });
+
+        stopButton.addEventListener('click', () => {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+        });
+        const bufferingIndicator = document.getElementById('bufferingIndicator');
+
+audioPlayer.addEventListener('progress', function() {
+    if (this.buffered.length > 0 && this.buffered.end(0) < this.duration) {
+        bufferingIndicator.style.display = 'inline';
+    }
+});
+
+audioPlayer.addEventListener('timeupdate', function() {
+    if (this.currentTime > this.buffered.end(0) - 1) {
+        bufferingIndicator.style.display = 'inline';
+    } else {
+        bufferingIndicator.style.display = 'none';
+    }
+});
+    </script>
+</body>
+</html>
